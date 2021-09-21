@@ -1,21 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { combineReducers, createStore } from "redux";
 
+import CalenderScreen from "./src/data/screens/CalenderScreen";
+import { Provider } from "react-redux";
+import React from "react";
+import UniversityDetailScreen from "./src/data/screens/UniversityDetailScreen";
+import UniverstiesScreen from "./src/data/screens/UniverstiesScreen";
+import { createAppContainer } from "react-navigation";
+import { createBottomTabNavigator } from "react-navigation-tabs";
+import { createStackNavigator } from 'react-navigation-stack';
+import {universityReducer} from './src/store/reducers/university'
+
+const rootReducer = combineReducers({
+  university: universityReducer,
+});
+const store = createStore(rootReducer);
+const switchNavigator = createBottomTabNavigator({
+  Calender: createStackNavigator({
+    Calenders: CalenderScreen,
+  }),
+  UniversititesFlow: createStackNavigator({
+    Universities: UniverstiesScreen,
+    UniversityDetail: UniversityDetailScreen,
+  })
+});
+
+const AppScreens = createAppContainer(switchNavigator);
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <AppScreens />
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
